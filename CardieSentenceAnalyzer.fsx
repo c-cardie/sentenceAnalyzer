@@ -21,3 +21,5 @@ let numSentences = (sentences |> Array.filter(fun x ->
 //can't figure out how to make all my words in "words" list be lowercase letters
 let rec stringsToLower = function
     | (x:string)::xs -> x.ToLower
+
+//hi
