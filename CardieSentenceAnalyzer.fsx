@@ -1,4 +1,5 @@
 open System
+open System.Globalization
 
 //take user input
 printfn "Please enter some text: "
@@ -27,8 +28,7 @@ let rec stringsToLower  = function
     | [] -> None
 *)
 
-let stringsToLower words = 
-    List.map(fun (word:string) -> word.ToLower) words
+let stringsToLower words =  List.map(fun (word:string) -> word.ToLower(new CultureInfo("en-US", false))) words
 
 
 let wordList = words |> Array.toList
