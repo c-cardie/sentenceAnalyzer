@@ -1,5 +1,6 @@
 open System
 open System.Globalization
+open System.Text.RegularExpressions
 
 //take user input
 printfn "Please enter some text: "
@@ -17,9 +18,6 @@ let numSentences = (sentences |> Array.filter(fun x ->
                                                         |"" -> false
                                                         | _->  true)).Length //does not count blank character at end
 
-//find and display most frequently occurring words
-
-//can't figure out how to make all my words in "words" list be lowercase letters
 
 (*
 let rec stringsToLower  = function
@@ -28,10 +26,27 @@ let rec stringsToLower  = function
     | [] -> None
 *)
 
+//make all words in "words" lowercase
 let stringsToLower words =  List.map(fun (word:string) -> word.ToLower(new CultureInfo("en-US", false))) words
-
-
 let wordList = words |> Array.toList
-
 let LowerWords:string list = stringsToLower wordList
-    
+
+//find and display most frequently occuring words
+
+let concatLowerWords = String.concat " " LowerWords
+
+let strip chars = String.collect (fun c -> if Seq.exists((=)c) chars then "" else c.ToString())
+
+let noPeriods = strip "." concatLowerWords
+
+let mostFrequentWord (s) =
+        Regex.Matches(s,@"\S+")
+        |> Seq.cast<Match>
+        |> Seq.map (fun m -> m.ToString())
+        |> Seq.groupBy id
+        |> Seq.map (fun (k,v) -> k,Seq.length v)
+        |> Seq.sortBy (fun (_,v) -> -v)
+        |> Seq.head
+        |> fst
+
+mostFrequentWord noPeriods
