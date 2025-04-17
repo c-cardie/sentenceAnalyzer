@@ -19,7 +19,19 @@ let numSentences = (sentences |> Array.filter(fun x ->
 //find and display most frequently occurring words
 
 //can't figure out how to make all my words in "words" list be lowercase letters
-let rec stringsToLower = function
-    | (x:string)::xs -> x.ToLower
 
-//hi
+(*
+let rec stringsToLower  = function
+    | (x:string)::xs -> Some x.ToLower
+        stringsToLower xs
+    | [] -> None
+*)
+
+let stringsToLower words = 
+    List.map(fun (word:string) -> word.ToLower) words
+
+
+let wordList = words |> Array.toList
+
+let LowerWords:string list = stringsToLower wordList
+    
