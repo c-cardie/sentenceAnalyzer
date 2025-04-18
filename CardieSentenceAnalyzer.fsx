@@ -55,3 +55,28 @@ let properNounFinder (s) =
 let uniqueWordCount = wordOccurances noPunctuation
 
 let properNouns = properNounFinder concatRegularWords
+
+//displaying number of words
+printfn "Number of words: \n %A \n" numWords
+
+//displaying number of sentences
+printfn "Number of sentences: \n %A \n" numSentences
+
+//displaying unique word count
+printfn "Unique word count: \n %A \n" uniqueWordCount
+
+//displaying proper nouns
+printfn "Proper nounns: \n %A" properNouns
+
+(*
+let replace chars = String.map (fun c -> if Seq.exists((=)c) chars then '\n' else c)
+
+let uniqueWordCountString = uniqueWordCount.ToString()
+
+let neatUniqueWordCountString = strip "[]()"uniqueWordCountString
+replace ";" neatUniqueWordCountString
+
+
+printfn "%s" neatUniqueWordCountString
+*)
+
