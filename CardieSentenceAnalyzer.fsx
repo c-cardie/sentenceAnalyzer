@@ -45,14 +45,11 @@ let wordOccurances (s) =
 
 let concatRegularWords = String.concat " " sentences
 
+//find proper nouns
 //Regex adapted from: https://stackoverflow.com/questions/19691391/regex-find-proper-nouns-or-phrases-that-are-not-first-word-in-a-sentence
 let properNounFinder (s) =
     Regex.Matches(s,@"(?<!^|\. |\? |\! |  )[A-Z][a-z]+")
     |> Seq.cast<Match>
-    |> Seq.map (fun m -> m.ToString())
-    |> Seq.groupBy id
-    |> Seq.map (fun (k,v) -> k,Seq.length v)
-    |> Seq.sortBy (fun (_,v) -> -v)
     |> Seq.toList
 
 let uniqueWordCount = wordOccurances noPunctuation
