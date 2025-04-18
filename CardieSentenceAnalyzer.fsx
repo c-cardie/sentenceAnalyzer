@@ -39,6 +39,7 @@ let strip chars = String.collect (fun c -> if Seq.exists((=)c) chars then "" els
 
 let noPeriods = strip "." concatLowerWords
 
+(*
 let mostFrequentWord (s) =
         Regex.Matches(s,@"\S+")
         |> Seq.cast<Match>
@@ -48,5 +49,16 @@ let mostFrequentWord (s) =
         |> Seq.sortBy (fun (_,v) -> -v)
         |> Seq.head
         |> fst
+*)
+
+
+let mostFrequentWord (s) =
+        Regex.Matches(s,@"\S+")
+        |> Seq.cast<Match>
+        |> Seq.map (fun m -> m.ToString())
+        |> Seq.groupBy id
+        |> Seq.map (fun (k,v) -> k,Seq.length v)
+        |> Seq.sortBy (fun (_,v) -> -v)
+        |> Seq.toList
 
 mostFrequentWord noPeriods
