@@ -5,11 +5,10 @@ open System.Text.RegularExpressions
 //take user input
 printfn "Please enter some text: "
 let string = System.Console.ReadLine()
-printfn "%s" string
 
 //split string into words using Trim
 let words = string.Split " "
-let sentences = string.Split "."
+let sentences = string.Split([|'.'; '?'; '!'|])
 
 //count number of words and sentences
 let numWords = words.Length
@@ -17,14 +16,6 @@ let numSentences = (sentences |> Array.filter(fun x ->
                                                         match x with
                                                         |"" -> false
                                                         | _->  true)).Length //does not count blank character at end
-
-
-(*
-let rec stringsToLower  = function
-    | (x:string)::xs -> Some x.ToLower
-        stringsToLower xs
-    | [] -> None
-*)
 
 //make all words in "words" lowercase
 let stringsToLower words =  List.map(fun (word:string) -> word.ToLower(new CultureInfo("en-US", false))) words
@@ -37,22 +28,10 @@ let concatLowerWords = String.concat " " LowerWords
 
 let strip chars = String.collect (fun c -> if Seq.exists((=)c) chars then "" else c.ToString())
 
-let noPeriods = strip "." concatLowerWords
+let noPeriods = strip ".?!" concatLowerWords
 
-(*
-let mostFrequentWord (s) =
-        Regex.Matches(s,@"\S+")
-        |> Seq.cast<Match>
-        |> Seq.map (fun m -> m.ToString())
-        |> Seq.groupBy id
-        |> Seq.map (fun (k,v) -> k,Seq.length v)
-        |> Seq.sortBy (fun (_,v) -> -v)
-        |> Seq.head
-        |> fst
-*)
-
-
-let mostFrequentWord (s) =
+//Adapted from https://fsharpforfunandprofit.com/posts/monoids-part2/
+let wordOccurances (s) =
         Regex.Matches(s,@"\S+")
         |> Seq.cast<Match>
         |> Seq.map (fun m -> m.ToString())
@@ -61,4 +40,15 @@ let mostFrequentWord (s) =
         |> Seq.sortBy (fun (_,v) -> -v)
         |> Seq.toList
 
-mostFrequentWord noPeriods
+let properNounFinder (s) =
+    Regex.Matches(s,@"[A-Z]{1,1}[a-z]*([\s][A-Z]{1,1}[a-z]*)*")
+    |> Seq.cast<Match>
+    |> Seq.map (fun m -> m.ToString())
+    |> Seq.groupBy id
+    |> Seq.map (fun (k,v) -> k,Seq.length v)
+    |> Seq.sortBy (fun (_,v) -> -v)
+    |> Seq.toList
+
+let uniqueWordCount = wordOccurances noPeriods
+
+let properNouns = properNounFinder string
