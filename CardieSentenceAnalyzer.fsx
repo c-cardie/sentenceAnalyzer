@@ -24,12 +24,15 @@ let LowerWords:string list = stringsToLower wordList
 
 //find and display most frequently occuring words
 
+//make the array of lowercase words a single string
 let concatLowerWords = String.concat " " LowerWords
 
+//get rid of punctuation
 let strip chars = String.collect (fun c -> if Seq.exists((=)c) chars then "" else c.ToString())
 
-let noPeriods = strip ".?!" concatLowerWords
+let noPunctuation = strip ".?!" concatLowerWords
 
+//find word occurances
 //Adapted from https://fsharpforfunandprofit.com/posts/monoids-part2/
 let wordOccurances (s) =
         Regex.Matches(s,@"\S+")
@@ -40,8 +43,11 @@ let wordOccurances (s) =
         |> Seq.sortBy (fun (_,v) -> -v)
         |> Seq.toList
 
+let concatRegularWords = String.concat " " sentences
+
+//Regex adapted from: https://stackoverflow.com/questions/19691391/regex-find-proper-nouns-or-phrases-that-are-not-first-word-in-a-sentence
 let properNounFinder (s) =
-    Regex.Matches(s,@"[A-Z]{1,1}[a-z]*([\s][A-Z]{1,1}[a-z]*)*")
+    Regex.Matches(s,@"(?<!^|\. |\? |\! |  )[A-Z][a-z]+")
     |> Seq.cast<Match>
     |> Seq.map (fun m -> m.ToString())
     |> Seq.groupBy id
@@ -49,6 +55,6 @@ let properNounFinder (s) =
     |> Seq.sortBy (fun (_,v) -> -v)
     |> Seq.toList
 
-let uniqueWordCount = wordOccurances noPeriods
+let uniqueWordCount = wordOccurances noPunctuation
 
-let properNouns = properNounFinder string
+let properNouns = properNounFinder concatRegularWords
