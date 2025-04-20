@@ -6,12 +6,14 @@ open System.Text.RegularExpressions
 printfn "Please enter some text: "
 
 //convert user input to a string called "string"
-let string = System.Console.ReadLine()
+
+let replace chars = String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c)
+let string = System.Console.ReadLine() |> replace "-"
 
 //split string into words and sentences using Split
 
 //words array
-let words = string.Split " "
+let words = string.Split " " 
 
 //sentences array
 let sentences = string.Split([|'.'; '?'; '!'|])
@@ -40,10 +42,15 @@ let concatLowerWords = String.concat " " LowerWords
 
 //get rid of punctuation
 
+//pulled from https://stackoverflow.com/questions/20308875/remove-characters-from-string-in-f
+//let replace chars = String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c)
+
 //Adapted from https://stackoverflow.com/questions/20308875/remove-characters-from-string-in-f
 let strip chars = String.collect (fun c -> if Seq.exists((=)c) chars then "" else c.ToString())
 
-let noPunctuation = strip ".?!,-:" concatLowerWords
+let noPunctuation = strip ".?!,:" concatLowerWords
+
+let noHyphens = replace "-" noPunctuation
 
 //find word occurances
 //Adapted from https://fsharpforfunandprofit.com/posts/monoids-part2/
@@ -56,7 +63,7 @@ let wordOccurances (s) =
         |> Seq.sortBy (fun (_,v) -> -v)
         |> Seq.toList
 
-let uniqueWordCount = wordOccurances noPunctuation
+let uniqueWordCount = wordOccurances noHyphens
 
 //find proper nouns
 //Regex adapted from: https://stackoverflow.com/questions/19691391/regex-find-proper-nouns-or-phrases-that-are-not-first-word-in-a-sentence
