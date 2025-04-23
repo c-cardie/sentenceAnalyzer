@@ -5,9 +5,10 @@ open System.Text.RegularExpressions
 //take user input
 printfn "Please enter some text: "
 
-//convert user input to a string called "string"
-
+//replace pulled from https://stackoverflow.com/questions/20308875/remove-characters-from-string-in-f
 let replace chars = String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c)
+
+//convert user input to a string called "string"
 let string = System.Console.ReadLine() |> replace "-"
 
 //split string into words and sentences using Split
@@ -42,9 +43,6 @@ let concatLowerWords = String.concat " " LowerWords
 
 //get rid of punctuation
 
-//pulled from https://stackoverflow.com/questions/20308875/remove-characters-from-string-in-f
-//let replace chars = String.map (fun c -> if Seq.exists((=)c) chars then ' ' else c)
-
 //Adapted from https://stackoverflow.com/questions/20308875/remove-characters-from-string-in-f
 let strip chars = String.collect (fun c -> if Seq.exists((=)c) chars then "" else c.ToString())
 
@@ -66,6 +64,7 @@ let wordOccurances (s) =
 let uniqueWordCount = wordOccurances noHyphens
 
 //find proper nouns
+//function adapted from https://fsharpforfunandprofit.com/posts/monoids-part2/
 //Regex adapted from: https://stackoverflow.com/questions/19691391/regex-find-proper-nouns-or-phrases-that-are-not-first-word-in-a-sentence
 let properNounFinder (s) =
     Regex.Matches(s,@"(?<!^|\. |\? |\! |  )[A-Z][a-z]+")
@@ -89,16 +88,4 @@ printfn "Unique word count: \n %A \n" uniqueWordCount
 
 //displaying proper nouns
 printfn "Proper nouns: \n %A" properNouns
-
-(*
-let replace chars = String.map (fun c -> if Seq.exists((=)c) chars then '\n' else c)
-
-let uniqueWordCountString = uniqueWordCount.ToString()
-
-let neatUniqueWordCountString = strip "[]()"uniqueWordCountString
-replace ";" neatUniqueWordCountString
-
-
-printfn "%s" neatUniqueWordCountString
-*)
 
